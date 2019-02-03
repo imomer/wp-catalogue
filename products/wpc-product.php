@@ -61,16 +61,15 @@ function wpt_product_imgs() {
 	     wp_create_nonce( plugin_basename( __FILE__ ) ) . '" />';
 	// get items stored in wp_post_meta
 	$product_img_url = get_post_meta( $post->ID, 'wpc_product_imgs', false );
-	$count = 0;
-//	print_r($product_img_url);
+	$count  = 0;
 	echo " <div id='wpc-product-image-gallery'>";
 	if ( sizeof( $product_img_url ) > 0 ) { // if an element exists
 		// Get value of retrieved meta keys and populate on wp dashboard
-		foreach ( $product_img_url as $url ) {
+		foreach ( $product_img_url[0] as $url ) {
 			
-			echo '<div class="wpc-product" id="wpc-product-'.$count.'">
-  					<img src="'.$url.'"  alt="Preview" >
-  					<input type="hidden" name="wpc_product_imgs[]" value="'.$url.'">
+			echo '<div class="wpc-product" id="wpc-product-' . $count . '">
+  					<img src="' . $url . '"  alt="Preview" >
+  					<input type="hidden" name="wpc_product_imgs[]" value="' . $url . '">
   					<a class="remove-image remove-product-img" href="#" style="display: inline;">&#215;</a></div>';
 			$count ++;
 		}
@@ -98,27 +97,28 @@ function wpt_save_wpcproduct_meta( $post_id, $post ) {
 	}
 	// OK, we're authenticated: we need to find and save the data
 	// We'll put it into an array to make it easier to loop though.
-	$item_meta['wpc_product_imgs']  = $_POST['wpc_product_imgs'];
-	$item_meta['product_price'] = $_POST['product_price'];
+	$item_meta['wpc_product_imgs'] = $_POST['wpc_product_imgs'];
+	$item_meta['product_price']    = $_POST['product_price'];
 	// Add values of $events_meta as custom fields
 	
-	return ($item_meta);
-	/*foreach ( $item_meta as $key => $value ) { // Cycle through the $events_meta array!
+	foreach ( $item_meta as $key => $value ) { // Cycle through the $events_meta array!
 		if ( $post->post_type == 'revision' ) {
 			return;
 		} // Don't store custom data twice
-		$value = implode( ',', (array) $value ); // If $value is an array, make it a CSV (unlikely)
+		
 		if ( get_post_meta( $post->ID, $key, false ) ) { // If the custom field already has a value
 			update_post_meta( $post->ID, $key, $value );
 		} else { // If the custom field doesn't have a value
 			add_post_meta( $post->ID, $key, $value );
 		}
+		
 		if ( ! $value ) {
 			delete_post_meta( $post->ID, $key );
 		} // Delete if blank
-	}*/
+	}
 }
-if($_POST != null ){
+
+if ( $_POST != null ) {
 	add_action( 'save_post', 'wpt_save_wpcproduct_meta', 1, 2 ); // save the custom fields
 }
 add_action( 'init', 'create_wpcproduct_taxonomies', 0 );
@@ -208,9 +208,9 @@ function wpc_big_images() {
 	$wpc_image_width  = get_option( 'image_width' );
 	$wpc_image_height = get_option( 'image_height' );
 	
-	$wpc_resize_images_1 = get_post_meta( $post->ID, 'product_img1', true ) != null ? get_post_meta( $post->ID, 'product_img1',	true ) : null;
-	$wpc_resize_images_2 = get_post_meta( $post->ID, 'product_img2', true ) != null ? get_post_meta( $post->ID, 'product_img2',	true ) : null;
-	$wpc_resize_images_3 = get_post_meta( $post->ID, 'product_img3', true ) != null ? get_post_meta( $post->ID, 'product_img3',	true ) : null;
+	$wpc_resize_images_1 = get_post_meta( $post->ID, 'product_img1', true ) != null ? get_post_meta( $post->ID, 'product_img1', true ) : null;
+	$wpc_resize_images_2 = get_post_meta( $post->ID, 'product_img2', true ) != null ? get_post_meta( $post->ID, 'product_img2', true ) : null;
+	$wpc_resize_images_3 = get_post_meta( $post->ID, 'product_img3', true ) != null ? get_post_meta( $post->ID, 'product_img3', true ) : null;
 	
 	$resize_img_1 = wp_get_image_editor( $wpc_resize_images_1 );
 	if ( ! is_wp_error( $resize_img_1 ) ) {
