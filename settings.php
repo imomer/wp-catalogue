@@ -119,7 +119,8 @@
               <input type="hidden" name="hosted_button_id" value="A74K2K689DWTY">
               <input type="image" src="https://www.paypalobjects.com/en_AU/i/btn/btn_donateCC_LG.gif" border="0" name="submit" alt="PayPal — The safer, easier way to pay online.">
               <img alt="" border="0" src="https://www.paypalobjects.com/en_AU/i/scr/pixel.gif" width="1" height="1">
-            </form></td>
+            </form>
+          </td>
         </tr>
         <tr>
           <td style="border:0;"><?php _e('you can also help by','wpc') ?> <a href="http://wordpress.org/support/view/plugin-reviews/wp-catalogue" target="_blank"><?php _e('rating this plugin on wordpress.org','wpc') ?></a></td>

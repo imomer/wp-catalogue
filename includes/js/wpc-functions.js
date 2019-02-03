@@ -26,23 +26,6 @@ jQuery(document).ready(function(){
     });
     jQuery('textarea').blur(function() {});
 
-
-//script to do the basic slidetoggle
-
-	/*jQuery(".wpc-grey-boxes span.close").click(function(){
-		jQuery(this).addClass('opened');
-		jQuery(this).removeClass('close');
-		jQuery(this).parent().removeClass('closed');
-	jQuery(".wpc-grey-boxes span.opened").click(function(){
-			jQuery(this).removeClass('opened');
-			jQuery(this).addClass('close');
-			jQuery(this).parent().addClass('closed');
-		});
-});*/
-	
-	
-	
-	
 	
 //script to upload images
 

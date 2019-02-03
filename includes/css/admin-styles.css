@@ -143,16 +143,73 @@ div.wpc-headings{
     width:50%;
     margin-right:10px;
 }
-.st_upload_button{
+.st_upload_button, .wpc-button{
     background: white;
     border: solid 1px #CCC;
     cursor: pointer;
 }
 #order-submit{
-    margin-top:15px;	
-}
-.inn_temp {
-    line-height: 16px;
+    margin-top:15px;
     font-family: "Courier New", Courier, monospace;
     resize: none;
+}
+/* Plugin Update css 03-Feb-2019*/
+#wpc-product-image-gallery {
+    display: grid;
+    grid-gap: 30px;
+    grid-template-columns: repeat( 6, minmax(120px, 1fr) );
+    padding: 20px 10px;
+}
+
+.wpc-product {
+    position: relative;
+}
+.wpc-product img{
+    max-width: 100%;
+    height: auto;
+}
+.remove-image {
+    display: none;
+    position: absolute;
+    top: -10px;
+    right: -10px;
+    border-radius: 10em;
+    padding: 2px 6px 3px;
+    text-decoration: none;
+    font: 700 21px/20px sans-serif;
+    background: #555;
+    border: 3px solid #fff;
+    color: #FFF;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.5), inset 0 2px 4px rgba(0,0,0,0.3);
+    text-shadow: 0 1px 2px rgba(0,0,0,0.5);
+    -webkit-transition: background 0.5s;
+    transition: background 0.5s;
+}
+.remove-image:hover {
+    background: #E54E4E;
+    padding: 3px 7px 5px;
+    top: -11px;
+    right: -11px;
+}
+.remove-image:active {
+    background: #E54E4E;
+    top: -10px;
+    right: -11px;
+}
+
+.wpc-add-image-button {
+    font-size: 50px;
+    padding: 0;
+    margin: 0;
+    text-align: center;
+    border: none;
+    color: #444444;
+    text-shadow: 0 1px 2px 1px rgba(0,0,0,0.5);
+    display: table-cell;
+    vertical-align: middle;
+    max-width: 150px;
+    max-height: 150px;
+}
+.wpc-add-image-button:hover {
+    box-shadow: 1px 2px 20px 1px rgba(0,0,0,0.5);
 }
