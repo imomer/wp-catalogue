@@ -224,8 +224,8 @@ function wpc_images_sizing() {
 		
 		$resize_img = wp_get_image_editor( $wpc_resize_image );
 		$resize_img_thumb = wp_get_image_editor( $wpc_resize_image );
-		$big_img_path = "";
-		$thumb_img_path = "";
+		$big_img_path = [];
+		$thumb_img_path = [];
 		if ( ! is_wp_error( $resize_img ) ) {
 			
 			// Explode Images Name and Ext
@@ -246,20 +246,22 @@ function wpc_images_sizing() {
 			$resize_img->save( $big_filename );
 //			Storing large image size files in database
 			$big_img_name = $product_img_name . '-big-' . $wpc_image_width . 'x' . $wpc_image_height . '.' . $product_img_ext;
-			$big_img_path = $upload_dir['url'] . '/' . $big_img_name;
+			$big_img_path_temp = $upload_dir['url'] . '/' . $big_img_name;
+			array_push($big_img_path, $big_img_path_temp);
 			
 			$thumb_filename = $resize_img_thumb->generate_filename( 'thumb-' . $wpc_thumb_width . 'x' . $wpc_thumb_height, $upload_dir['path'], null );
 			$resize_img_thumb->save( $thumb_filename );
 //			Storing large image size files in database
 			$thumb_img_name = $product_img_name . '-thumb-' . $wpc_thumb_width . 'x' . $wpc_thumb_height . '.' .
 			                    $product_img_ext;
-			$thumb_img_path = $upload_dir['url'] . '/' . $thumb_img_name;
+			$thumb_img_path_temp = $upload_dir['url'] . '/' . $thumb_img_name;
+			array_push($thumb_img_path, $thumb_img_path_temp);
+			
 			
 		}
-		update_post_meta( $post->ID, 'wpc_product_imgs_big', $big_img_path );
-		update_post_meta( $post->ID, 'product_img1_thumb', $thumb_img_path);
-		
 	}
+	update_post_meta( $post->ID, 'wpc_product_imgs_big', $big_img_path );
+	update_post_meta( $post->ID, 'wpc_product_imgs_thumb', $thumb_img_path);
 }
 
 function dev_check_current_screen() {
