@@ -197,7 +197,6 @@ function wpc_upgrader( $upgrader_object, $options ) {
 				set_transient( 'wp_wpc_updated', 1 );
 				$product_img = array(); // Optional Array
 				global $wpdb;
-				global $post;
 				$wpc_posts = get_post( [ 'wpcproduct' ] );
 				foreach ( $wpc_posts as $wpc_post ) {
 					$results = $wpdb->get_results(
@@ -232,12 +231,12 @@ add_action( 'upgrader_process_complete', 'wpc_upgrader', 10, 2 );
  * Show a notice to anyone who has just updated this plugin
  * This notice shouldn't display to anyone who has just installed the plugin for the first time
  */
-function wp_upe_display_update_notice() {
+function wpc_display_update_notice() {
 	// Check the transient to see if we've just updated the plugin
 	if ( get_transient( 'wp_upe_updated' ) ) {
-		echo '<div class="notice notice-success">' . __( 'Thanks for updating', 'wp-upe' ) . '</div>';
-		delete_transient( 'wp_upe_updated' );
+		echo '<div class="notice notice-success">' . __( 'Thanks for updating', 'wp-wpc' ) . '</div>';
+		delete_transient( 'wp_wpc_updated' );
 	}
 }
 
-add_action( 'admin_notices', 'wp_upe_display_update_notice' );
+add_action( 'admin_notices', 'wpc_display_update_notice' );
