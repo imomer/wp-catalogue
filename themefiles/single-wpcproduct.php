@@ -75,48 +75,36 @@
                 while (have_posts()) :
                     the_post();
             
-                    $img1   =   get_post_meta($post->ID,'product_img1_big',true);
-                    $img2   =	get_post_meta($post->ID,'product_img2_big',true);
-                    $img3   =	get_post_meta($post->ID,'product_img3_big',true);
-                    
-                    $thumb_img1   =     get_post_meta($post->ID,'product_img1_thumb',true);
-                    $thumb_img2   =	get_post_meta($post->ID,'product_img2_thumb',true);
-                    $thumb_img3   =	get_post_meta($post->ID,'product_img3_thumb',true);
-        ?>	 
+                    $imgs   =   get_post_meta($post->ID,'wpc_product_imgs',false)[0];
+                    $count = 1;
+                    $thumb_imgs  =     get_post_meta($post->ID,'wpc_product_imgs_thumb')[0];
+        ?>
                     <div id="wpc-product-gallery">
-                        <?php 
+                        <?php
                             $img_height = get_option('image_height');
                             $img_width = get_option('image_width');
                         ?>
                         <div class="product-img-view" style="width:<?php echo $img_width; ?>px; height:<?php echo $img_height; ?>px;">
-                            <img src="<?php echo $img1; ?>" alt="" id="img1" />
-                            <img src="<?php echo $img2; ?>" alt="" id="img2" />
-                            <img src="<?php echo $img3; ?>" alt="" id="img3" />
+                              <?php foreach ($imgs as $img){ ?>
+                                    <img src="<?php echo $img; ?>" alt="" id="img-<?= $count?>" />
+                              <?php $count++; }?>
                         </div>
 
                         <div class="wpc-product-img">
                         <?php
-                            if($thumb_img1):
-                        ?>
-                                <div class="new-prdct-img">
-                                    <img src="<?php echo $thumb_img1; ?>" alt="" width="151" height="94" id="img1" />
-                                </div>
-                        <?php
-                            endif;
-                            if($thumb_img2):
-                        ?>
-                                <div class="new-prdct-img">
-                                    <img src="<?php echo $thumb_img2; ?>" alt="" width="151" height="94" id="img2"/>
-                                </div>
-                        <?php
-                            endif;
-                            if($thumb_img3):
-                        ?>
-                                <div class="new-prdct-img">
-                                    <img src="<?php echo $thumb_img3; ?>" alt="" width="151" height="94" id="img3"/>
-                                </div>
-                        <?php
-                            endif;
+                        $count = 1;
+                        foreach ( $thumb_imgs as $thumb_img ) {
+	
+	                        if($thumb_img){
+		                        ?>
+                                  <div class="new-prdct-img">
+                                        <img src="<?php echo $thumb_img; ?>" alt="" width="151" height="94"
+                                             id="img-<?=$count ?>" />
+                                  </div>
+		                        <?php
+	                        }
+	                        $count++;
+                        }
                         ?>
                         </div>
                         <div class="clear"></div>

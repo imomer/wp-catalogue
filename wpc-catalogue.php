@@ -156,160 +156,17 @@ function catalogue() {
                 while($products->have_posts()): $products->the_post();
                     $title = get_the_title();
                     $permalink = get_permalink();
-                    $img = get_post_meta(get_the_id(),'product_img1',true);
-                    $price = get_post_meta(get_the_id(),'product_price',true);
+                    $price = get_post_meta(get_the_id(),'product_price',true); //unused
 					echo  '<!--wpc product-->';
                     echo  '<div class="wpc-product">';
-							
-                            $wpc_thumb_big_check = $wpdb->get_results("SELECT *
-                                                FROM ".$wpdb->postmeta."
-                                                WHERE post_id = ".$post->ID."
-                                                And meta_key in ('product_img1_thumb','product_img2_thumb','product_img3_thumb','product_img1_big','product_img2_thumb','product_img3_thumb')");
-										
-                        if(!$wpc_thumb_big_check) {
-                            $upload_dir = wp_upload_dir();
-                            
-                            $wpc_image_width = get_option('image_width');
-                            $wpc_image_height = get_option('image_height');
-                            $wpc_thumb_width = get_option('thumb_width');
-                            $wpc_thumb_height = get_option('thumb_height');
-
-                            $wpc_product_images_1 = get_post_meta($post->ID, 'product_img1', true);
-                            $wpc_product_images_2 = get_post_meta($post->ID, 'product_img2', true);
-                            $wpc_product_images_3 = get_post_meta($post->ID, 'product_img3', true);
-
-                            /// For Big 1
-                            $big_resize_img_1 = wp_get_image_editor($wpc_product_images_1);
-                            if (!is_wp_error($big_resize_img_1)) {
-                                $product_big_img_1 = $wpc_product_images_1;
-                                $product_img_explode_1 = explode('/', $product_big_img_1);
-                                $product_img_name_1 = end($product_img_explode_1);
-                                $product_img_name_explode_1 = explode('.', $product_img_name_1);
-
-                                $product_img_name_1 = $product_img_name_explode_1[0];
-                                $product_img_ext_1 = $product_img_name_explode_1[1];
-
-                                $big_crop_1 = array('center', 'center');
-                                $big_resize_img_1->resize($wpc_image_width, $wpc_image_height, $big_crop_1);
-                                $big_filename_1 = $big_resize_img_1->generate_filename('big-' . $wpc_image_width . 'x' . $wpc_image_height, $upload_dir['path'], NULL);
-                                $big_resize_img_1->save($big_filename_1);
-
-                                $big_img_name_1 = $upload_dir['url'] . '/' . $product_img_name_1 . '-big-' . $wpc_image_width . 'x' . $wpc_image_height . '.' . $product_img_ext_1;
-                            }
-                            update_post_meta($post->ID, 'product_img1_big', $big_img_name_1);
-                            
-                            /// For Big 2
-                            $big_resize_img_2 = wp_get_image_editor($wpc_product_images_2);
-                            if (!is_wp_error($big_resize_img_2)) {
-                                $product_big_img_2 = $wpc_product_images_2;
-                                $product_img_explode_2 = explode('/', $product_big_img_2);
-                                $product_img_name_2 = end($product_img_explode_2);
-                                $product_img_name_explode_2 = explode('.', $product_img_name_2);
-
-                                $product_img_name_2 = $product_img_name_explode_2[0];
-                                $product_img_ext_2 = $product_img_name_explode_2[1];
-
-                                $big_crop_2 = array('center', 'center');
-                                $big_resize_img_2->resize($wpc_image_width, $wpc_image_height, $big_crop_2);
-                                $big_filename_2 = $big_resize_img_2->generate_filename('big-' . $wpc_image_width . 'x' . $wpc_image_height, $upload_dir['path'], NULL);
-                                $big_resize_img_2->save($big_filename_2);
-
-                                $big_img_name_2 = $upload_dir['url'] . '/' . $product_img_name_2 . '-big-' . $wpc_image_width . 'x' . $wpc_image_height . '.' . $product_img_ext_2;
-                            }
-                            update_post_meta($post->ID, 'product_img2_big', $big_img_name_2);
-									
-                            /// For Big 3
-                            $big_resize_img_3 = wp_get_image_editor($wpc_product_images_3);
-                            if (!is_wp_error($big_resize_img_3)) {
-                                $product_big_img_3 = $wpc_product_images_3;
-                                $product_img_explode_3 = explode('/', $product_big_img_3);
-                                $product_img_name_3 = end($product_img_explode_3);
-                                $product_img_name_explode_3 = explode('.', $product_img_name_3);
-
-                                $product_img_name_3 = $product_img_name_explode_3[0];
-                                $product_img_ext_3 = $product_img_name_explode_3[1];
-
-                                $big_crop_3 = array('center', 'center');
-                                $big_resize_img_3->resize($wpc_image_width, $wpc_image_height, $big_crop_3);
-                                $big_filename_3 = $big_resize_img_3->generate_filename('big-' . $wpc_image_width . 'x' . $wpc_image_height, $upload_dir['path'], NULL);
-                                $big_resize_img_3->save($big_filename_3);
-
-                                $big_img_name_3 = $upload_dir['url'] . '/' . $product_img_name_3 . '-big-' . $wpc_image_width . 'x' . $wpc_image_height . '.' . $product_img_ext_3;
-                            }
-                            update_post_meta($post->ID, 'product_img3_big', $big_img_name_3);
-								
-                            // For Thumb 1
-                            $wpc_product_images_thumb_1 = get_post_meta($post->ID, 'product_img1', true);
-                            $wpc_product_images_thumb_2 = get_post_meta($post->ID, 'product_img2', true);
-                            $wpc_product_images_thumb_3 = get_post_meta($post->ID, 'product_img3', true);
-
-                            $thumb_resize_img_1 = wp_get_image_editor($wpc_product_images_thumb_1);
-                            if (!is_wp_error($thumb_resize_img_1)) {
-				$product_thumb_img_explode_1 = explode('/', $wpc_product_images_thumb_1);
-                                $product_thumb_img_name_1 = end($product_thumb_img_explode_1);
-                                $product_thumb_img_name_explode_1 = explode('.', $product_thumb_img_name_1);
-							
-                                $product_thumb_img_name_1 = $product_thumb_img_name_explode_1[0];
-                                $product_thumb_img_ext_1 = $product_thumb_img_name_explode_1[1];
-
-                                $thumb_crop_1 = array('center', 'center');
-                                $thumb_resize_img_1->resize($wpc_thumb_width, $wpc_thumb_height, $thumb_crop_1);
-
-                                $thumb_filename_1 = $thumb_resize_img_1->generate_filename('thumb-' . $wpc_thumb_width . 'x' . $wpc_thumb_height, $upload_dir['path'], NULL);
-                                $thumb_resize_img_1->save($thumb_filename_1);
-
-                                $thumb_img_name_1  = $upload_dir['url'] . '/' . $product_thumb_img_name_1 . '-thumb-' . $wpc_thumb_width . 'x' . $wpc_thumb_height . '.' . $product_thumb_img_ext_1 ;
-                               
-                            }
-                            update_post_meta($post->ID, 'product_img1_thumb', $thumb_img_name_1);
-							
-                            // For Thumbs 2
-                            $thumb_resize_img_2 = wp_get_image_editor($wpc_product_images_thumb_2);
-                            if (!is_wp_error($thumb_resize_img_2)) {
-                                $product_thumb_img_explode_2 = explode('/', $wpc_product_images_thumb_2);
-                                $product_thumb_img_name_2 = end($product_thumb_img_explode_2);
-                                $product_thumb_img_name_explode_2 = explode('.', $product_thumb_img_name_2);
-
-                                $product_thumb_img_name_2 = $product_thumb_img_name_explode_2[0];
-                                $product_thumb_img_ext_2 = $product_thumb_img_name_explode_2[1];
-
-                                $thumb_crop_2 = array('center', 'center');
-                                $thumb_resize_img_2->resize($wpc_thumb_width, $wpc_thumb_height, $thumb_crop_2);
-
-                                $thumb_filename_2 = $thumb_resize_img_2->generate_filename('thumb-' . $wpc_thumb_width . 'x' . $wpc_thumb_height, $upload_dir['path'], NULL);
-                                $thumb_resize_img_2->save($thumb_filename_2);
-
-                                $thumb_img_name_2  = $upload_dir['url'] . '/' . $product_thumb_img_name_2 . '-thumb-' . $wpc_thumb_width . 'x' . $wpc_thumb_height . '.' . $product_thumb_img_ext_2;
-                            }
-                            update_post_meta($post->ID, 'product_img2_thumb', $thumb_img_name_2);
-							
-                            // For Thumbs 3
-                            $thumb_resize_img_3 = wp_get_image_editor($wpc_product_images_thumb_3);
-                            if (!is_wp_error($thumb_resize_img_3)) {
-                                $product_thumb_img_explode_3 = explode('/', $wpc_product_images_thumb_3);
-                                $product_thumb_img_name_3 = end($product_thumb_img_explode_3);
-                                $product_thumb_img_name_explode_3 = explode('.', $product_thumb_img_name_3);
-
-                                $product_thumb_img_name_3 = $product_thumb_img_name_explode_3[0];
-                                $product_thumb_img_ext_3 = $product_thumb_img_name_explode_3[1];
-
-                                $thumb_crop_3 = array('center', 'center');
-                                $thumb_resize_img_3->resize($wpc_thumb_width, $wpc_thumb_height, $thumb_crop_3);
-
-                                $thumb_filename_3 = $thumb_resize_img_3->generate_filename('thumb-' . $wpc_thumb_width . 'x' . $wpc_thumb_height, $upload_dir['path'], NULL);
-                                $thumb_resize_img_3->save($thumb_filename_3);
-
-                                $thumb_img_name_3  = $upload_dir['url'] . '/' . $product_thumb_img_name_3 . '-thumb-' . $wpc_thumb_width . 'x' . $wpc_thumb_height . '.' . $product_thumb_img_ext_3;
-                            }
-                            update_post_meta($post->ID, 'product_img3_thumb', $thumb_img_name_3);
-							
-			}
+							$wpc_thumb_check = get_post_meta(get_the_ID(), 'wpc_product_imgs_thumb', true);
                         
                         $wpc_thumb_width = get_option('thumb_width');
                         $wpc_thumb_height = get_option('thumb_height');
-			$image = get_post_meta($post->ID,'product_img1_thumb',true);
+						$image = get_post_meta($post->ID,'wpc_product_imgs_thumb',true);
 					
-                        echo  '<div class="wpc-img" style="width:' . $wpc_thumb_width . 'px; height:' . $wpc_thumb_height . 'px; overflow:hidden"><a href="'. $permalink .'" class="wpc-product-link"><img src="'. $image .'" alt="" /></a></div>';
+                        echo  '<div class="wpc-img" style="width:' . $wpc_thumb_width . 'px; height:' .
+                              $wpc_thumb_height . 'px; overflow:hidden"><a href="'. $permalink .'" class="wpc-product-link"><img src="'. $image[0] .'" alt="" /></a></div>';
 
                         echo  '<p class="wpc-title"><a href="'.$permalink.'">' . $title . '</a></p>';
                         echo  '</div>';

@@ -209,6 +209,8 @@ div.wpc-headings{
     vertical-align: middle;
     max-width: 150px;
     max-height: 150px;
+    min-height: 120px;
+    min-width: 120px;
 }
 .wpc-add-image-button:hover {
     box-shadow: 1px 2px 20px 1px rgba(0,0,0,0.5);

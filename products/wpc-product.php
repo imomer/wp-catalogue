@@ -121,6 +121,8 @@ function wpt_save_wpcproduct_meta( $post_id, $post ) {
 
 if ( $_POST != null ) {
 	add_action( 'save_post', 'wpt_save_wpcproduct_meta', 1, 2 ); // save the custom fields
+	add_action( 'save_post', 'wpc_images_sizing' );
+	
 }
 add_action( 'init', 'create_wpcproduct_taxonomies', 0 );
 function create_wpcproduct_taxonomies() {
@@ -206,7 +208,6 @@ function my_manage_wpcproduct_columns( $column, $post_id ) {
  * @modified  05 Feb, 2019
  * @version 1.8.0
  */
-add_action( 'save_post', 'wpc_images_sizing' );
 function wpc_images_sizing() {
 	global $post;
 	
@@ -219,13 +220,13 @@ function wpc_images_sizing() {
 	$wpc_thumb_height = get_option( 'thumb_height' );
 	
 	$wpc_resize_images = get_post_meta($post->ID,'wpc_product_imgs', false );
-	
+	$big_img_path = [];
+	$thumb_img_path = [];
 	foreach ($wpc_resize_images[0] as $wpc_resize_image){
 		
 		$resize_img = wp_get_image_editor( $wpc_resize_image );
 		$resize_img_thumb = wp_get_image_editor( $wpc_resize_image );
-		$big_img_path = [];
-		$thumb_img_path = [];
+	
 		if ( ! is_wp_error( $resize_img ) ) {
 			
 			// Explode Images Name and Ext
@@ -258,6 +259,8 @@ function wpc_images_sizing() {
 			array_push($thumb_img_path, $thumb_img_path_temp);
 			
 			
+		}else{
+			print_r(is_wp_error( $resize_img ));
 		}
 	}
 	update_post_meta( $post->ID, 'wpc_product_imgs_big', $big_img_path );

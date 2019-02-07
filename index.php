@@ -132,6 +132,8 @@ function register_catalogue_settings() {
 	add_option( 'image_width', 500, '', 'yes' );
 	add_option( 'thumb_height', 151, '', 'yes' );
 	add_option( 'thumb_width', 212, '', 'yes' );
+	add_image_size( "wpc_thumbs", 212, 151, ["center","center"] );
+	add_image_size( "wpc_bigs", 500, 358, ["center","center"] );
 }
 
 function wp_catalogue_settings() {
