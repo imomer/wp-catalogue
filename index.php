@@ -91,11 +91,11 @@ function front_scripts() {
 	wp_enqueue_script( 'wpcf-js' );
 	wp_register_style( 'catalogue-css', WP_CATALOGUE_CSS . '/catalogue-styles.css' );
 	wp_enqueue_style( 'catalogue-css' );
-	wp_register_style( 'slick-css','//cdn.jsdelivr.net/jquery.slick/1.5.8/slick.css' );
+	wp_register_style( 'slick-css', '//cdn.jsdelivr.net/jquery.slick/1.5.8/slick.css' );
 	wp_enqueue_style( 'slick-css' );
-	wp_register_style( 'slick-theme-css','//cdn.jsdelivr.net/jquery.slick/1.5.8/slick-theme.css' );
+	wp_register_style( 'slick-theme-css', '//cdn.jsdelivr.net/jquery.slick/1.5.8/slick-theme.css' );
 	wp_enqueue_style( 'slick-theme-css' );
-	wp_register_script( 'slick-js', '//cdn.jsdelivr.net/jquery.slick/1.5.8/slick.min.js');
+	wp_register_script( 'slick-js', '//cdn.jsdelivr.net/jquery.slick/1.5.8/slick.min.js' );
 	wp_enqueue_script( 'slick-js' );
 }
 
@@ -139,8 +139,8 @@ function register_catalogue_settings() {
 	add_option( 'image_width', 500, '', 'yes' );
 	add_option( 'thumb_height', 151, '', 'yes' );
 	add_option( 'thumb_width', 212, '', 'yes' );
-	add_image_size( "wpc_thumbs", 212, 151, ["center","center"] );
-	add_image_size( "wpc_bigs", 500, 358, ["center","center"] );
+	add_image_size( "wpc_thumbs", 212, 151, [ "center", "center" ] );
+	add_image_size( "wpc_bigs", 500, 358, [ "center", "center" ] );
 }
 
 function wp_catalogue_settings() {
@@ -182,11 +182,10 @@ function do_theme_redirect( $url ) {
 add_action( 'admin_notices', 'dev_check_current_screen' );
 
 
-
 /* ========================  Text Domain =========================== */
 load_plugin_textdomain( 'wpc', 'WPCACHEHOME' . 'languages', basename( dirname( __FILE__ ) ) . '/languages' );
 
-/* ========================  Update from 1.7.6 to allow multiple images =========================== */
+/* ========================  Update from 1.7.6 to 1.8 to allow multiple images =========================== */
 /**
  * This function runs when WordPress completes its upgrade process
  * It iterates through each plugin updated to see if ours is included
@@ -204,10 +203,21 @@ function wpc_upgrader( $upgrader_object, $options ) {
 			if ( $plugin == $wpc_plugin ) {
 				// Set a transient to record that our plugin has just been updated
 				set_transient( 'wp_wpc_updated', 1 );
-				$product_img = array(); // Optional Array
+				$product_img    = array();
+				$big_img_path   = array();
+				$thumb_img_path = array();
 				global $wpdb;
+				$upload_dir = wp_upload_dir();
+				
+				$wpc_image_width  = get_option( 'image_width' );
+				$wpc_image_height = get_option( 'image_height' );
+				$wpc_thumb_width  = get_option( 'thumb_width' );
+				$wpc_thumb_height = get_option( 'thumb_height' );
+				
 				$wpc_posts = get_post( [ 'wpcproduct' ] );
+				
 				foreach ( $wpc_posts as $wpc_post ) {
+					/* Fetching the old stored images */
 					$results = $wpdb->get_results(
 						" SELECT meta_key  FROM {$wpdb->prefix}postmeta  WHERE meta_key  LIKE 'product_img_'",
 						ARRAY_N
@@ -217,14 +227,50 @@ function wpc_upgrader( $upgrader_object, $options ) {
 						return $value;
 					}, $results );
 					
-					$count = 0;
 					if ( sizeof( $results ) > 0 ) { // if an element exists
-						// Get value of retrieved meta keys and populate on wp dashboard
+						// Get value of retrieved meta keys and populate on wpc Catalogue V.1.8
 						foreach ( $results as $result ) {
-							$product_img[ $count ] = get_post_meta( $wpc_post->ID, $result[0], true ); //
-                                        // Optional array
-							$count ++;
+							$product_image = get_post_meta( $wpc_post->ID, $result[0], true ); //
+							/* using previous developers code to generate the images in the same format
+														   he did */
+							$resize_img       = wp_get_image_editor( $product_image );
+							$resize_img_thumb = wp_get_image_editor( $product_image );
+							
+							// Explode Images Name and Ext
+							$product_img_explode      = explode( '/', $product_image );
+							$product_img_name         = end( $product_img_explode );
+							$product_img_name_explode = explode( '.', $product_img_name );
+							
+							$product_img_name = $product_img_name_explode[0];
+							$product_img_ext  = $product_img_name_explode[1];
+							// Crop and resizing images
+							$crop = array( 'center', 'center' );
+							$resize_img->resize( $wpc_image_width, $wpc_image_height, $crop );
+							$resize_img_thumb->resize( $wpc_thumb_width, $wpc_thumb_height, $crop );
+							
+							// Generating large size files
+							$big_filename = $resize_img->generate_filename( 'big-' . $wpc_image_width . 'x' . $wpc_image_height, $upload_dir['path'], null );
+							$resize_img->save( $big_filename );
+//			Storing large image size files in database
+							$big_img_name      = $product_img_name . '-big-' . $wpc_image_width . 'x' . $wpc_image_height . '.' . $product_img_ext;
+							$big_img_path_temp = $upload_dir['url'] . '/' . $big_img_name;
+							
+							$thumb_filename = $resize_img_thumb->generate_filename( 'thumb-' . $wpc_thumb_width . 'x' . $wpc_thumb_height, $upload_dir['path'], null );
+							$resize_img_thumb->save( $thumb_filename );
+//			Storing large image size files in database
+							$thumb_img_name      = $product_img_name . '-thumb-' . $wpc_thumb_width . 'x' . $wpc_thumb_height . '.' .
+							                       $product_img_ext;
+							$thumb_img_path_temp = $upload_dir['url'] . '/' . $thumb_img_name;
+							
+							array_push( $product_img, $product_image );
+							array_push( $big_img_path, $big_img_path_temp );
+							array_push( $thumb_img_path, $thumb_img_path_temp );
+							
 						}
+						
+						update_post_meta( $wpc_post->ID, 'wpc_product_imgs', $product_img );
+						update_post_meta( $wpc_post->ID, 'wpc_product_imgs_big', $big_img_path );
+						update_post_meta( $wpc_post->ID, 'wpc_product_imgs_thumb', $thumb_img_path );
 					} else { // if no product image is stored
 					
 					}
