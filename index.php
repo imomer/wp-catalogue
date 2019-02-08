@@ -67,6 +67,7 @@ function wp_catalogue_scripts_method() {
 	
 	wp_register_style( 'admin-css', WP_CATALOGUE_CSS . '/admin-styles.css' );
 	wp_enqueue_style( 'admin-css' );
+	
 }
 
 function wpc_admin_init() {
@@ -84,12 +85,18 @@ function front_scripts() {
 	global $bg_color;
 	$bg_color = get_option( 'templateColorforProducts' );
 	
-	wp_enqueue_script( 'jquery' );
+	wp_enqueue_script( 'jquery', '//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js' );
 	wp_deregister_script( 'wpcf-js' );
 	wp_register_script( 'wpcf-js', WP_CATALOGUE_JS . '/wpc-front.js' );
 	wp_enqueue_script( 'wpcf-js' );
 	wp_register_style( 'catalogue-css', WP_CATALOGUE_CSS . '/catalogue-styles.css' );
 	wp_enqueue_style( 'catalogue-css' );
+	wp_register_style( 'slick-css','//cdn.jsdelivr.net/jquery.slick/1.5.8/slick.css' );
+	wp_enqueue_style( 'slick-css' );
+	wp_register_style( 'slick-theme-css','//cdn.jsdelivr.net/jquery.slick/1.5.8/slick-theme.css' );
+	wp_enqueue_style( 'slick-theme-css' );
+	wp_register_script( 'slick-js', '//cdn.jsdelivr.net/jquery.slick/1.5.8/slick.min.js');
+	wp_enqueue_script( 'slick-js' );
 }
 
 // creating wp catalogue menus
