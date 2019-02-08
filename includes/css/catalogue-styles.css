@@ -160,6 +160,8 @@
     border:#dcdbdb 5px solid;
     margin:0 14px 0 0;
     overflow: hidden;
+    /*display: inline-block !important;*/
+    max-width: 520px;
 }
 .wpc-product-imgs {
     width:161px;
@@ -193,4 +195,33 @@
 }
 .entry-content img {
     max-width: inherit !important; /* Fluid images for posts, comments, and widgets */
+}
+
+@media screen and (max-width: 900px){
+    #wpc-col-2 {
+        width: 96%;
+        float: none;
+        clear:both;
+        margin: 0 auto
+    }
+    
+    .product-img-view {
+        width: 99%;
+        float: none;
+        clear: both;
+        margin: 0 auto;
+        border: none;
+    }
+    .wpc-product img, .product-img-view img, .wpc-product-img img{
+        margin: 0 auto !important;
+    }
+    .wpc-product-imgs {
+        width: 98%;
+        float: none;
+        clear: both;
+        margin: 0 auto;
+    }
+    .wpc-product-imgs .slick-slide img {
+        margin: 0 auto;
+    }
 }

@@ -75,7 +75,7 @@ echo '<div class="wp-catalogue-breadcrumb"> <a href="' . $catalogue_page_url . '
 					while ( have_posts() ) :
 						the_post();
 						
-						$imgs       = get_post_meta( $post->ID, 'wpc_product_imgs', false )[0];
+						$imgs       = get_post_meta( $post->ID, 'wpc_product_imgs_big', false )[0];
 						$count      = 1;
 						$thumb_imgs = get_post_meta( $post->ID, 'wpc_product_imgs_thumb' )[0];
 						?>
@@ -86,7 +86,7 @@ echo '<div class="wp-catalogue-breadcrumb"> <a href="' . $catalogue_page_url . '
 							  $img_width  = get_option( 'image_width' );
 							  ?>
                                 <div class="product-img-view slick-for slider slider-single "
-                                     style="width:<?php echo $img_width; ?>px; height:<?php echo $img_height; ?>px;
+                                     style="
                                              margin-top: 30px;">
                                     <?php foreach ( $imgs as $img ) { ?>
                                         <div>

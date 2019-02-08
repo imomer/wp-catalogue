@@ -1,31 +1,5 @@
 var $ = jQuery;
 jQuery(document).ready(function(){
-	
-	
-	/*jQuery(".new-prdct-img img").click(function(){
-		var cID	=	jQuery(this).attr('id');
-		jQuery('.product-img-view img').hide();
-		jQuery('.product-img-view img#'+cID).fadeIn(500);
-		
-	});*/
-
-    /*jQuery('.slick-for').slick({
-        slidesToShow: 1,
-        slidesToScroll: 1,
-        arrows: false,
-        fade: true,
-        asNavFor: '.slider-nav'
-    });
-    jQuery('.slick-nav').slick({
-        vertical: true,
-        slidesToShow: 3,
-        slidesToScroll: 1,
-        asNavFor: '.slider-for',
-        dots: false,
-        centerMode: true,
-        focusOnSelect: true
-    });*/
-
     var $ = jQuery;
 
     $('.slider-single').slick({
@@ -34,24 +8,21 @@ jQuery(document).ready(function(){
         arrows: false,
         fade: false,
         adaptiveHeight: true,
-        // variableWidth: true,
-        infinite: false,
+        infinite: true,
         useTransform: true,
         speed: 400,
         cssEase: 'cubic-bezier(0.77, 0, 0.18, 1)',
         responsive: [
             {
-                breakpoint: 620,
+                breakpoint: 680,
                 settings: {
                     arrows: true,
-                    variableWidth: true
                 }
             },
             {
-                breakpoint: 345,
+                breakpoint: 580,
                 settings: {
                     arrows: true,
-                    variableWidth: true
                 }
             }
         ]
@@ -70,20 +41,24 @@ jQuery(document).ready(function(){
             focusOnSelect: false,
             infinite: true,
             responsive: [{
-                breakpoint: 1024,
+                breakpoint: 900,
                 settings: {
+                    vertical: false,
                     slidesToShow: 3,
                     slidesToScroll: 1,
+                    // centerMode: true,
                 }
             }, {
                 breakpoint: 640,
                 settings: {
+                    vertical: false,
                     slidesToShow: 3,
                     slidesToScroll: 1,
                 }
             }, {
                 breakpoint: 420,
                 settings: {
+                    vertical: false,
                     slidesToShow: 2,
                     slidesToScroll: 1,
                 }
