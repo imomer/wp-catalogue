@@ -150,6 +150,9 @@ div.wpc-headings{
 }
 #order-submit{
     margin-top:15px;
+}
+.inn_temp {
+    line-height: 16px;
     font-family: "Courier New", Courier, monospace;
     resize: none;
 }
