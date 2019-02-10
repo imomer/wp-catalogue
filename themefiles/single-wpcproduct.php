@@ -74,7 +74,7 @@ echo '<div class="wp-catalogue-breadcrumb"> <a href="' . $catalogue_page_url . '
                                              margin-top: 30px;">
                                     <?php foreach ( $imgs as $img ) { ?>
                                         <div>
-                                          <img src="<?php echo $img; ?>" alt="" id="img-<?= $count ?>"/>
+                                          <img src="<?php echo $img; ?>" alt="" id="img-<?= $count ?>" width="510"/>
                                         </div>
                                             <?php $count ++;
                                     } ?>
@@ -86,8 +86,7 @@ echo '<div class="wp-catalogue-breadcrumb"> <a href="' . $catalogue_page_url . '
                                     foreach ( $thumb_imgs as $thumb_img ) {
                                           if ( $thumb_img ) { ?>
                                               <div> <!--class="wpc-product-img"-->
-                                                    <img src="<?php echo $thumb_img; ?>" alt="" width="151" height="94"
-                                                         id="img-<?= $count ?>"/>
+                                                    <img src="<?php echo $thumb_img; ?>" alt="" id="img-<?= $count ?>"/>
                                               </div>
                                         <?php		}
 							$count ++;
