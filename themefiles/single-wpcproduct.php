@@ -47,20 +47,23 @@ echo '<div class="wp-catalogue-breadcrumb"> <a href="' . $catalogue_page_url . '
 		  $terms = get_terms( 'wpccategories', $args );
 		  $count = count( $terms );
 		  echo '<div id="wpc-col-1">';
-                wpc_cats();
-            echo '</div>';
+		  wpc_cats();
+		  echo '</div>';
 		  ?>
             <!--/Left-menu-->
             <!--col-2-->
             
             <div id="wpc-col-2">
 				<?php
+				
+				
+				
 				if ( have_posts() ) :
 					while ( have_posts() ) :
 						the_post();
 						
-						$imgs       = get_post_meta( $post->ID, 'wpc_product_imgs_big', false )[0];
 						$count      = 1;
+						$imgs       = get_post_meta( $post->ID, 'wpc_product_imgs_big', false )[0];
 						$thumb_imgs = get_post_meta( $post->ID, 'wpc_product_imgs_thumb' )[0];
 						?>
                           
@@ -72,29 +75,30 @@ echo '<div class="wp-catalogue-breadcrumb"> <a href="' . $catalogue_page_url . '
                                 <div class="product-img-view slick-for slider slider-single "
                                      style="
                                              margin-top: 30px;">
-                                    <?php foreach ( $imgs as $img ) { ?>
-                                        <div>
-                                          <img src="<?php echo $img; ?>" alt="" id="img-<?= $count ?>" width="510"/>
-                                        </div>
-                                            <?php $count ++;
-                                    } ?>
+									<?php foreach ( $imgs as $img ) { ?>
+                                          <div>
+                                                <img src="<?php echo $img; ?>" alt="" id="img-<?= $count ?>"
+                                                     width="510"/>
+                                          </div>
+										<?php $count ++;
+									} ?>
                                 </div>
                                 
                                 <div class="wpc-product-imgs slick-nav slider slider-nav">
-                                    <?php
-                                    $count = 1;
-                                    foreach ( $thumb_imgs as $thumb_img ) {
-                                          if ( $thumb_img ) { ?>
+									<?php
+									$count = 1;
+									foreach ( $thumb_imgs as $thumb_img ) {
+										if ( $thumb_img ) { ?>
                                               <div> <!--class="wpc-product-img"-->
                                                     <img src="<?php echo $thumb_img; ?>" alt="" id="img-<?= $count ?>"/>
                                               </div>
-                                        <?php		}
-							$count ++;
-                                    }
+										<?php }
+										$count ++;
+									}
 									?>
                                 </div>
                                 <div class="clear"></div>
-                               
+                          
                           </div>
 						
 						<?php
