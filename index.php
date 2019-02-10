@@ -75,11 +75,13 @@ function front_scripts(){
     $bg_color = get_option('templateColorforProducts');
     
     wp_enqueue_script('jquery');
+    wp_enqueue_script('wpc-accordion', WP_CATALOGUE_JS.'/accordion.min.js', '', '', true);
     wp_deregister_script('wpcf-js');
-    wp_register_script('wpcf-js',WP_CATALOGUE_JS.'/wpc-front.js');
+    wp_register_script('wpcf-js',WP_CATALOGUE_JS.'/wpc-front.js', '', '', true);
     wp_enqueue_script('wpcf-js');
     wp_register_style('catalogue-css', WP_CATALOGUE_CSS.'/catalogue-styles.css' );
-    wp_enqueue_style( 'catalogue-css' );	
+    wp_enqueue_style( 'catalogue-css' );
+    wp_enqueue_style('wpc-fa', 'https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css');
 }
 
 // creating wp catalogue menus
