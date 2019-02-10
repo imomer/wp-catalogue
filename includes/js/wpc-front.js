@@ -1,3 +1,4 @@
+
 var $ = jQuery;
 jQuery(document).ready(function(){
     var $ = jQuery;
@@ -78,7 +79,15 @@ jQuery(document).ready(function(){
 
         $('.slider-single').slick('slickGoTo', goToSingleSlide);
     });
-	
+
+    // Accordion Nav
+    jQuery('.wpc-accordion').navAccordion({
+            expandButtonText: '<i class="fa fa-plus"></i>',
+            collapseButtonText: '<i class="fa fa-minus"></i>'
+        },
+        function () {
+            console.log('Callback')
+        });
 
 });
 

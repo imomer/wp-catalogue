@@ -54,6 +54,7 @@ define( 'WP_CATALOGUE_CSS', WP_CATALOGUE_INCLUDES . '/css' );
 define( 'WP_CATALOGUE_JS', WP_CATALOGUE_INCLUDES . '/js' );
 
 // adding scripts and styles to amdin
+
 add_action( 'admin_enqueue_scripts', 'wp_catalogue_scripts_method' );
 function wp_catalogue_scripts_method() {
 	global $current_screen;
@@ -85,7 +86,8 @@ function front_scripts() {
 	global $bg_color;
 	$bg_color = get_option( 'templateColorforProducts' );
 	
-	wp_enqueue_script( 'jquery', '//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js' );
+	wp_enqueue_script( 'jquery'/*, '//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js'*/ );
+	wp_enqueue_script( 'wpc-accordion', WP_CATALOGUE_JS . '/accordion.min.js', '', '', true );
 	wp_deregister_script( 'wpcf-js' );
 	wp_register_script( 'wpcf-js', WP_CATALOGUE_JS . '/wpc-front.js' );
 	wp_enqueue_script( 'wpcf-js' );
@@ -97,6 +99,7 @@ function front_scripts() {
 	wp_enqueue_style( 'slick-theme-css' );
 	wp_register_script( 'slick-js', '//cdn.jsdelivr.net/jquery.slick/1.5.8/slick.min.js' );
 	wp_enqueue_script( 'slick-js' );
+	wp_enqueue_style( 'wpc-fa', 'https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css' );
 }
 
 // creating wp catalogue menus

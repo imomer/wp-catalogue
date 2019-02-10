@@ -46,25 +46,9 @@ echo '<div class="wp-catalogue-breadcrumb"> <a href="' . $catalogue_page_url . '
 		  
 		  $terms = get_terms( 'wpccategories', $args );
 		  $count = count( $terms );
-		  echo '<div id="wpc-col-1">
-                <ul class="wpc-categories">';
-		  if ( $count > 0 ) {
-			  echo '<li class="wpc-category"><a href="' . get_option( 'catalogue_page_url' ) . '">All Products</a></li>';
-			  
-			  foreach ( $terms as $term ) {
-				  if ( $term->slug == $slug ) {
-					  $class = 'active-wpc-cat';
-				  } else {
-					  $class = '';
-				  }
-				  
-				  echo '<li  class="wpc-category ' . $class . '"><a href="' . get_term_link( $term->slug, 'wpccategories' ) . '">' . $term->name . '</a></li>';
-			  }
-		  } else {
-			  echo '<li  class="wpc-category"><a href="#">No category</a></li>';
-		  }
-		  echo '</ul>
-            </div>';
+		  echo '<div id="wpc-col-1">';
+                wpc_cats();
+            echo '</div>';
 		  ?>
             <!--/Left-menu-->
             <!--col-2-->
