@@ -36,6 +36,8 @@ function customtaxorder_init() {
 	if ( $init_query == 0 ) {
 		$wpdb->query( "ALTER TABLE $wpdb->terms ADD `term_order` INT( 4 ) NULL DEFAULT '0'" );
 	}
+	
+	wpc_upgrade_database();
 }
 
 register_activation_hook( __FILE__, 'customtaxorder_init' );
@@ -204,90 +206,98 @@ function wpc_upgrader( $upgrader_object, $options ) {
 		// Iterate through the plugins being updated and check if ours is there
 		foreach ( $options['plugins'] as $plugin ) {
 			if ( $plugin == $wpc_plugin ) {
-				// Set a transient to record that our plugin has just been updated
-					  $product_img    = array();
-					  $big_img_path   = array();
-					  $thumb_img_path = array();
-					  global $wpdb;
-					  $upload_dir = wp_upload_dir();
-					  
-					  $wpc_image_width  = get_option( 'image_width' );
-					  $wpc_image_height = get_option( 'image_height' );
-					  $wpc_thumb_width  = get_option( 'thumb_width' );
-					  $wpc_thumb_height = get_option( 'thumb_height' );
-					  
-					  $wpc_posts = get_posts( [ 'post_type' => 'wpcproduct' ] );
-					  //						print_r($wpc_posts);
-					  
-					  foreach ( $wpc_posts as $wpc_post ) {
-						  /* Fetching the old stored images */
-						  $results = $wpdb->get_results(
-							  " SELECT meta_key  FROM {$wpdb->prefix}postmeta  WHERE meta_key  LIKE 'product_img_'",
-							  ARRAY_N
-						  );
-						  // store meta keys of products in an array.
-						  $results = array_map( function ( $value ) {
-							  return $value;
-						  }, $results );
-						  
-						  if ( sizeof( $results ) > 0 ) { // if an element exists
-							  // Get value of retrieved meta keys and populate on wpc Catalogue V.1.8
-							  foreach ( $results as $result ) {
-								  $product_image = get_post_meta( $wpc_post->ID, $result[0], true ); //
-//													print_r("url->".$product_image);
-								  /* using previous developers code to generate the images in the same format
-																   he did */
-								  if ( $product_image ) {
-									  
-									  $resize_img       = wp_get_image_editor( $product_image );
-									  $resize_img_thumb = wp_get_image_editor( $product_image );
-									  
-									  // Explode Images Name and Ext
-									  $product_img_explode      = explode( '/', $product_image );
-									  $product_img_name         = end( $product_img_explode );
-									  $product_img_name_explode = explode( '.', $product_img_name );
-//								print_r( $product_img_name_explode );
-									  $product_img_name = $product_img_name_explode[0];
-									  $product_img_ext  = $product_img_name_explode[1];
-									  // Crop and resizing images
-									  $crop = array( 'center', 'center' );
-									  $resize_img->resize( $wpc_image_width, $wpc_image_height, $crop );
-									  $resize_img_thumb->resize( $wpc_thumb_width, $wpc_thumb_height, $crop );
-									  
-									  // Generating large size files
-									  $big_filename = $resize_img->generate_filename( 'big-' . $wpc_image_width . 'x' . $wpc_image_height, $upload_dir['path'], null );
-									  $resize_img->save( $big_filename );
-//			Storing large image size files in database
-									  $big_img_name      = $product_img_name . '-big-' . $wpc_image_width . 'x' . $wpc_image_height . '.' . $product_img_ext;
-									  $big_img_path_temp = $upload_dir['url'] . '/' . $big_img_name;
-									  
-									  $thumb_filename = $resize_img_thumb->generate_filename( 'thumb-' . $wpc_thumb_width . 'x' . $wpc_thumb_height, $upload_dir['path'], null );
-									  $resize_img_thumb->save( $thumb_filename );
-//			Storing large image size files in database
-									  $thumb_img_name      = $product_img_name . '-thumb-' . $wpc_thumb_width . 'x' . $wpc_thumb_height . '.' .
-									                         $product_img_ext;
-									  $thumb_img_path_temp = $upload_dir['url'] . '/' . $thumb_img_name;
-									  
-									  array_push( $product_img, $product_image );
-									  array_push( $big_img_path, $big_img_path_temp );
-									  array_push( $thumb_img_path, $thumb_img_path_temp );
-								  }
-								  
-							  }
-							  
-							  update_post_meta( $wpc_post->ID, 'wpc_product_imgs', $product_img );
-							  update_post_meta( $wpc_post->ID, 'wpc_product_imgs_big', $big_img_path );
-							  update_post_meta( $wpc_post->ID, 'wpc_product_imgs_thumb', $thumb_img_path );
-						  } else { // if no product image is stored
-							 
-						  }
-					  }
+				wpc_upgrade_database();
 			}
 		}
 	}
 }
 
-add_action( 'upgrader_process_complete', 'wpc_upgrader', 10, 2 );
+//add_action( 'upgrader_process_complete', 'wpc_upgrader', 10, 2 );
+
+function wpc_upgrade_database(){
+      $checkUpdated = get_option('wpc_plugin_db_migration_1_7');
+      if(! $checkUpdated ) {
+	      $product_img    = array();
+	      $big_img_path   = array();
+	      $thumb_img_path = array();
+	      global $wpdb;
+	      $upload_dir = wp_upload_dir();
+	
+	      $wpc_image_width  = get_option( 'image_width' );
+	      $wpc_image_height = get_option( 'image_height' );
+	      $wpc_thumb_width  = get_option( 'thumb_width' );
+	      $wpc_thumb_height = get_option( 'thumb_height' );
+	
+	      $wpc_posts = get_posts( [ 'post_type' => 'wpcproduct' ] );
+	
+	      foreach ( $wpc_posts as $wpc_post ) {
+		      /* Fetching the old stored images */
+		      $results = $wpdb->get_results(
+			      " SELECT meta_key  FROM {$wpdb->prefix}postmeta  WHERE meta_key  LIKE 'product_img_'",
+			      ARRAY_N
+		      );
+		      // store meta keys of products in an array.
+		      $results = array_map( function ( $value ) {
+			      return $value;
+		      }, $results );
+		
+		      if ( sizeof( $results ) > 0 ) { // if an element exists
+			      // Get value of retrieved meta keys and populate on wpc Catalogue V.1.8
+			      foreach ( $results as $result ) {
+				      $product_image = get_post_meta( $wpc_post->ID, $result[0], true ); //
+//													print_r("url->".$product_image);
+				      /* using previous developers code to generate the images in the same format
+											   he did */
+				      if ( $product_image ) {
+					
+					      $resize_img       = wp_get_image_editor( $product_image );
+					      $resize_img_thumb = wp_get_image_editor( $product_image );
+					
+					      // Explode Images Name and Ext
+					      $product_img_explode      = explode( '/', $product_image );
+					      $product_img_name         = end( $product_img_explode );
+					      $product_img_name_explode = explode( '.', $product_img_name );
+//								print_r( $product_img_name_explode );
+					      $product_img_name = $product_img_name_explode[0];
+					      $product_img_ext  = $product_img_name_explode[1];
+					      // Crop and resizing images
+					      $crop = array( 'center', 'center' );
+					      $resize_img->resize( $wpc_image_width, $wpc_image_height, $crop );
+					      $resize_img_thumb->resize( $wpc_thumb_width, $wpc_thumb_height, $crop );
+					
+					      // Generating large size files
+					      $big_filename = $resize_img->generate_filename( 'big-' . $wpc_image_width . 'x' . $wpc_image_height, $upload_dir['path'], null );
+					      $resize_img->save( $big_filename );
+//			Storing large image size files in database
+					      $big_img_name      = $product_img_name . '-big-' . $wpc_image_width . 'x' . $wpc_image_height . '.' . $product_img_ext;
+					      $big_img_path_temp = $upload_dir['url'] . '/' . $big_img_name;
+					
+					      $thumb_filename = $resize_img_thumb->generate_filename( 'thumb-' . $wpc_thumb_width . 'x' . $wpc_thumb_height, $upload_dir['path'], null );
+					      $resize_img_thumb->save( $thumb_filename );
+//			Storing large image size files in database
+					      $thumb_img_name      = $product_img_name . '-thumb-' . $wpc_thumb_width . 'x' . $wpc_thumb_height . '.' .
+					                             $product_img_ext;
+					      $thumb_img_path_temp = $upload_dir['url'] . '/' . $thumb_img_name;
+					
+					      array_push( $product_img, $product_image );
+					      array_push( $big_img_path, $big_img_path_temp );
+					      array_push( $thumb_img_path, $thumb_img_path_temp );
+				      }
+				
+			      }
+			
+			      update_post_meta( $wpc_post->ID, 'wpc_product_imgs', $product_img );
+			      update_post_meta( $wpc_post->ID, 'wpc_product_imgs_big', $big_img_path );
+			      update_post_meta( $wpc_post->ID, 'wpc_product_imgs_thumb', $thumb_img_path );
+			      
+			      add_option('wpc_plugin_db_migration_1_7', false);
+		      } else { // if no product image is stored
+			
+		      }
+	      }
+      }
+}
+
 
 /**
  * Show a notice to anyone who has just updated this plugin
